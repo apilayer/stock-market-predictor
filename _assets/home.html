@@ -1,0 +1,756 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MarketStack • FusionCharts • GPT — Stock Trend Insights</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FusionCharts -->
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.charts.js"></script>
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+  </head>
+  <body class="antialiased bg-neutral-950 text-neutral-200 font-[Inter] selection:bg-indigo-500/30 selection:text-indigo-200">
+    <!-- App Shell -->
+    <div class="min-h-screen flex flex-col">
+      <!-- Topbar -->
+      <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/70 bg-neutral-950/80 border-b border-neutral-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-8 w-8 rounded-md bg-neutral-800 ring-1 ring-neutral-700 flex items-center justify-center">
+              <span class="text-[11px] font-semibold tracking-tight">MSG</span>
+            </div>
+            <div class="hidden sm:flex flex-col leading-tight">
+              <span class="text-[15px] font-semibold tracking-tight">MarketStack • FusionCharts • GPT</span>
+              <span class="text-xs text-neutral-400">Visualize trends, compare symbols, get natural-language insights</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="refreshBtn" class="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium tracking-tight bg-neutral-900 hover:bg-neutral-800 active:bg-neutral-800/80 ring-1 ring-neutral-800 hover:ring-neutral-700 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500/60">
+              <!-- refresh-cw -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 -ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-9-9"></path><path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 7.49 3.84"></path><path d="M21 3v6h-6"></path></svg>
+              Refresh
+            </button>
+            <button id="apiBtn" class="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium tracking-tight bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-500/90 text-white shadow-sm ring-1 ring-indigo-500/30 hover:ring-indigo-400/40 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500/60">
+              <!-- settings -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 -ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V22a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H2a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06c.48.48 1.15.62 1.82.33H8a1.65 1.65 0 0 0 1-1.51V2a2 2 0 0 1 4 0v.09c0 .65.39 1.24 1 1.51.67.29 1.34.15 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V8c0 .65.39 1.24 1 1.51.3.13.63.2.97.2H22a2 2 0 0 1 0 4h-.09c-.65 0-1.24.39-1.51 1Z"></path></svg>
+              Connect APIs
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="flex-1">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <!-- Controls -->
+          <section class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            <div class="xl:col-span-9">
+              <div class="rounded-xl border border-neutral-800 bg-neutral-900/40">
+                <div class="p-4 border-b border-neutral-800 flex flex-col md:flex-row md:items-center gap-3 justify-between">
+                  <div class="flex-1 flex items-center gap-3">
+                    <div class="relative flex-1">
+                      <input id="symbolInput" type="text" placeholder="Enter a stock symbol (e.g., AAPL) and press Add" class="w-full bg-neutral-900 text-neutral-100 placeholder-neutral-500 rounded-md pl-9 pr-28 py-2.5 text-sm ring-1 ring-neutral-800 focus:ring-neutral-700 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500/60">
+                      <!-- search -->
+                      <div class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-neutral-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                      </div>
+                      <div class="absolute inset-y-0 right-0 pr-1.5 flex items-center gap-1">
+                        <button id="addSymbolBtn" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium tracking-tight bg-neutral-800 hover:bg-neutral-700 active:bg-neutral-700/90 ring-1 ring-neutral-700 hover:ring-neutral-600 text-neutral-200">
+                          <!-- plus -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                    <div class="hidden md:flex items-center gap-2">
+                      <div class="text-xs text-neutral-500">Suggestions:</div>
+                      <div class="flex flex-wrap gap-1.5">
+                        <button data-suggest="AAPL" class="suggest-btn px-2 py-1 rounded-md text-xs font-medium bg-neutral-800 hover:bg-neutral-700 ring-1 ring-neutral-700 text-neutral-200">AAPL</button>
+                        <button data-suggest="MSFT" class="suggest-btn px-2 py-1 rounded-md text-xs font-medium bg-neutral-800 hover:bg-neutral-700 ring-1 ring-neutral-700 text-neutral-200">MSFT</button>
+                        <button data-suggest="NVDA" class="suggest-btn px-2 py-1 rounded-md text-xs font-medium bg-neutral-800 hover:bg-neutral-700 ring-1 ring-neutral-700 text-neutral-200">NVDA</button>
+                        <button data-suggest="GOOGL" class="suggest-btn px-2 py-1 rounded-md text-xs font-medium bg-neutral-800 hover:bg-neutral-700 ring-1 ring-neutral-700 text-neutral-200">GOOGL</button>
+                        <button data-suggest="TSLA" class="suggest-btn px-2 py-1 rounded-md text-xs font-medium bg-neutral-800 hover:bg-neutral-700 ring-1 ring-neutral-700 text-neutral-200">TSLA</button>
+                        <button data-suggest="AMZN" class="suggest-btn px-2 py-1 rounded-md text-xs font-medium bg-neutral-800 hover:bg-neutral-700 ring-1 ring-neutral-700 text-neutral-200">AMZN</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <!-- Timeframe -->
+                    <div class="inline-flex p-0.5 rounded-lg bg-neutral-900 ring-1 ring-neutral-800">
+                      <button data-range="1M" class="tf-btn px-2.5 py-1.5 rounded-md text-xs font-medium tracking-tight text-neutral-300 hover:text-white hover:bg-neutral-800">1M</button>
+                      <button data-range="3M" class="tf-btn px-2.5 py-1.5 rounded-md text-xs font-medium tracking-tight text-neutral-300 hover:text-white hover:bg-neutral-800">3M</button>
+                      <button data-range="6M" class="tf-btn px-2.5 py-1.5 rounded-md text-xs font-medium tracking-tight text-neutral-300 hover:text-white hover:bg-neutral-800">6M</button>
+                      <button data-range="1Y" class="tf-btn px-2.5 py-1.5 rounded-md text-xs font-medium tracking-tight text-neutral-300 hover:text-white hover:bg-neutral-800">1Y</button>
+                      <button data-range="5Y" class="tf-btn px-2.5 py-1.5 rounded-md text-xs font-medium tracking-tight text-neutral-300 hover:text-white hover:bg-neutral-800">5Y</button>
+                      <button data-range="YTD" class="tf-btn px-2.5 py-1.5 rounded-md text-xs font-medium tracking-tight text-white bg-neutral-800">YTD</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Selected symbols -->
+                <div class="px-4 py-3 border-b border-neutral-800">
+                  <div id="symbolsChips" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <!-- Charts -->
+                <div class="p-4 grid grid-cols-1 gap-4">
+                  <div class="rounded-lg bg-neutral-900/40 ring-1 ring-neutral-800">
+                    <div class="px-3 py-2 flex items-center justify-between border-b border-neutral-800">
+                      <div class="text-sm font-medium tracking-tight text-neutral-300">Price (Adjusted Close)</div>
+                      <div class="flex items-center gap-3 text-xs text-neutral-500">
+                        <span id="chartMeta" class="hidden sm:inline"></span>
+                        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-neutral-800 ring-1 ring-neutral-700">
+                          <!-- trending-up -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"></path><path d="M14 7h7v7"></path></svg>
+                          Zoom &amp; pan enabled
+                        </span>
+                      </div>
+                    </div>
+                    <div id="priceChart" class="w-full" style="height: 400px;"></div>
+                  </div>
+
+                  <div class="rounded-lg bg-neutral-900/40 ring-1 ring-neutral-800">
+                    <div class="px-3 py-2 flex items-center justify-between border-b border-neutral-800">
+                      <div class="text-sm font-medium tracking-tight text-neutral-300">Volume</div>
+                      <div id="volumeMeta" class="text-xs text-neutral-500"></div>
+                    </div>
+                    <div id="volumeChart" class="w-full" style="height: 180px;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Insights / Sentiment -->
+            <aside class="xl:col-span-3 flex flex-col gap-6">
+              <!-- GPT Insights -->
+              <div class="rounded-xl border border-neutral-800 bg-neutral-900/40">
+                <div class="p-4 border-b border-neutral-800 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <!-- sparkles -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.93 3.79L18 9l-4.07 2.21L12 15l-1.93-3.79L6 9l4.07-2.21L12 3z"></path><path d="M5 19l.66-1.31L7 17l-1.34-.69L5 15l-.66 1.31L3 17l1.34.69L5 19z"></path><path d="M19 19l.66-1.31L21 17l-1.34-.69L19 15l-.66 1.31L17 17l1.34.69L19 19z"></path></svg>
+                    <div class="text-sm font-medium tracking-tight">GPT Insights</div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <select id="insightHorizon" class="bg-neutral-900 text-neutral-200 text-xs rounded-md px-2 py-1.5 ring-1 ring-neutral-800 focus:outline-none">
+                      <option value="short">Short-term</option>
+                      <option value="medium">Medium-term</option>
+                      <option value="long">Long-term</option>
+                    </select>
+                    <button id="genInsightsBtn" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium tracking-tight bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-500/90 text-white ring-1 ring-indigo-500/30 hover:ring-indigo-400/40">
+                      <!-- sparkles -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.93 3.79L18 9l-4.07 2.21L12 15l-1.93-3.79L6 9l4.07-2.21L12 3z"></path><path d="M5 19l.66-1.31L7 17l-1.34-.69L5 15l-.66 1.31L3 17l1.34.69L5 19z"></path><path d="M19 19l.66-1.31L21 17l-1.34-.69L19 15l-.66 1.31L17 17l1.34.69L19 19z"></path></svg>
+                      Generate
+                    </button>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div id="insightsBox" class="text-sm text-neutral-300 leading-6 whitespace-pre-wrap">
+                    Select symbols and timeframe, then generate insights. No financial advice.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Market Sentiment -->
+              <div class="rounded-xl border border-neutral-800 bg-neutral-900/40">
+                <div class="p-4 border-b border-neutral-800 flex items-center justify-between">
+                  <div class="text-sm font-medium tracking-tight">Market Sentiment</div>
+                  <div id="sentimentBadge" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs ring-1 ring-neutral-700 bg-neutral-800 text-neutral-300">
+                    Neutral
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="flex items-end gap-6">
+                    <div class="flex-1">
+                      <div class="text-xs text-neutral-500 mb-1">Breadth (↑ last period)</div>
+                      <div class="flex items-center gap-2">
+                        <div id="breadthPct" class="text-2xl tracking-tight font-semibold">—</div>
+                        <div class="text-xs text-neutral-500">of selected symbols</div>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-xs text-neutral-500 mb-1">Avg. return (period)</div>
+                      <div id="avgReturn" class="text-2xl tracking-tight font-semibold">—</div>
+                    </div>
+                  </div>
+                  <div class="mt-4 text-xs text-neutral-500">
+                    Sentiment is calculated from price change over the chosen timeframe across selected symbols.
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </section>
+
+          <!-- Footer -->
+          <div class="mt-8 text-[13px] text-neutral-500 border-t border-neutral-900 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div>Data via MarketStack. Charts by FusionCharts. Insights by GPT. Delayed data may apply.</div>
+            <div>For demonstration only. Not investment advice.</div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- API Modal -->
+    <div id="apiModal" class="hidden fixed inset-0 z-[60] items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+      <div class="relative w-full max-w-lg rounded-xl bg-neutral-950 ring-1 ring-neutral-800 shadow-xl">
+        <div class="p-4 border-b border-neutral-800 flex items-center justify-between">
+          <div class="text-sm font-medium tracking-tight">Connect APIs</div>
+          <button id="closeApiModal" class="p-2 rounded-md hover:bg-neutral-900 ring-1 ring-transparent hover:ring-neutral-800">
+            <!-- x -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <div class="p-4 space-y-4">
+          <div>
+            <label class="block text-xs text-neutral-400 mb-1">MarketStack Access Key</label>
+            <input id="marketstackKey" type="password" placeholder="msk_live_xxx..." class="w-full bg-neutral-900 text-neutral-100 placeholder-neutral-500 rounded-md px-3 py-2 text-sm ring-1 ring-neutral-800 focus:ring-neutral-700 focus:outline-none">
+            <div class="text-[11px] text-neutral-500 mt-1">Stored locally in your browser for this demo.</div>
+          </div>
+          <div>
+            <label class="block text-xs text-neutral-400 mb-1">OpenAI API Key (for GPT insights)</label>
+            <input id="openaiKey" type="password" placeholder="sk-..." class="w-full bg-neutral-900 text-neutral-100 placeholder-neutral-500 rounded-md px-3 py-2 text-sm ring-1 ring-neutral-800 focus:ring-neutral-700 focus:outline-none">
+            <div class="text-[11px] text-neutral-500 mt-1">Alternatively, wire a backend endpoint at /api/gpt-insights.</div>
+          </div>
+        </div>
+        <div class="p-4 border-t border-neutral-800 flex items-center justify-end gap-2">
+          <button id="clearKeys" class="px-3 py-2 text-xs rounded-md ring-1 ring-neutral-800 hover:ring-neutral-700 bg-neutral-900">Clear</button>
+          <button id="saveKeys" class="px-3 py-2 text-xs rounded-md bg-indigo-600 hover:bg-indigo-500 text-white ring-1 ring-indigo-500/30">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="pointer-events-none fixed bottom-4 left-1/2 -translate-x-1/2 z-[70] hidden">
+      <div class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-neutral-900 ring-1 ring-neutral-800 text-sm">
+        <span id="toastMsg">Saved</span>
+      </div>
+    </div>
+
+    <script>
+      // --- State ---
+      const state = {
+        symbols: ["AAPL"],
+        range: "YTD",
+        series: {}, // {SYM: [{date, close, volume}]}
+        loading: false,
+        marketstackKey: null,
+        openaiKey: null,
+      };
+
+      // --- Elements ---
+      const symbolInput = document.getElementById("symbolInput");
+      const addSymbolBtn = document.getElementById("addSymbolBtn");
+      const symbolsChips = document.getElementById("symbolsChips");
+      const insightHorizon = document.getElementById("insightHorizon");
+      const genInsightsBtn = document.getElementById("genInsightsBtn");
+      const insightsBox = document.getElementById("insightsBox");
+      const sentimentBadge = document.getElementById("sentimentBadge");
+      const breadthPct = document.getElementById("breadthPct");
+      const avgReturn = document.getElementById("avgReturn");
+      const apiBtn = document.getElementById("apiBtn");
+      const apiModal = document.getElementById("apiModal");
+      const closeApiModal = document.getElementById("closeApiModal");
+      const marketstackKey = document.getElementById("marketstackKey");
+      const openaiKey = document.getElementById("openaiKey");
+      const saveKeys = document.getElementById("saveKeys");
+      const clearKeys = document.getElementById("clearKeys");
+      const toast = document.getElementById("toast");
+      const toastMsg = document.getElementById("toastMsg");
+      const chartMeta = document.getElementById("chartMeta");
+      const volumeMeta = document.getElementById("volumeMeta");
+      const refreshBtn = document.getElementById("refreshBtn");
+
+      // Timeframe buttons
+      const tfButtons = [...document.querySelectorAll(".tf-btn")];
+
+      // Suggestions
+      [...document.querySelectorAll(".suggest-btn")].forEach(btn => {
+        btn.addEventListener("click", () => {
+          symbolInput.value = btn.dataset.suggest;
+          addCurrentSymbol();
+        });
+      });
+
+      // --- Utilities ---
+      function showToast(msg) {
+        toastMsg.textContent = msg;
+        toast.classList.remove("hidden");
+        setTimeout(() => toast.classList.add("hidden"), 1800);
+      }
+
+      function fmtPct(x) {
+        const sign = x > 0 ? "+" : "";
+        return `${sign}${(x * 100).toFixed(2)}%`;
+      }
+
+      function dateISO(d) {
+        return d.toISOString().split("T")[0];
+      }
+
+      function rangeToDates(range) {
+        const end = new Date();
+        const start = new Date();
+        switch (range) {
+          case "1M":
+            start.setMonth(end.getMonth() - 1);
+            break;
+          case "3M":
+            start.setMonth(end.getMonth() - 3);
+            break;
+          case "6M":
+            start.setMonth(end.getMonth() - 6);
+            break;
+          case "1Y":
+            start.setFullYear(end.getFullYear() - 1);
+            break;
+          case "5Y":
+            start.setFullYear(end.getFullYear() - 5);
+            break;
+          case "YTD":
+          default:
+            start.setMonth(0); start.setDate(1);
+            break;
+        }
+        return { from: dateISO(start), to: dateISO(end) };
+      }
+
+      function setActiveTF(range) {
+        tfButtons.forEach(b => {
+          if (b.dataset.range === range) {
+            b.classList.add("bg-neutral-800","text-white");
+          } else {
+            b.classList.remove("bg-neutral-800","text-white");
+            b.classList.add("text-neutral-300");
+          }
+        });
+      }
+
+      function renderChips() {
+        symbolsChips.innerHTML = "";
+        state.symbols.forEach(sym => {
+          const chip = document.createElement("div");
+          chip.className = "inline-flex items-center gap-2 px-2 py-1 rounded-md bg-neutral-900 ring-1 ring-neutral-800";
+          chip.innerHTML = `
+            <span class="text-xs font-medium tracking-tight">${sym}</span>
+            <button class="p-1 rounded hover:bg-neutral-800 text-neutral-400" aria-label="Remove">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+            </button>
+          `;
+          chip.querySelector("button").addEventListener("click", () => {
+            state.symbols = state.symbols.filter(s => s !== sym);
+            delete state.series[sym];
+            renderChips();
+            updateAll();
+          });
+          symbolsChips.appendChild(chip);
+        });
+      }
+
+      function addCurrentSymbol() {
+        let sym = symbolInput.value.trim().toUpperCase();
+        if (!sym) return;
+        if (!/^[A-Z.\-]{1,10}$/.test(sym)) {
+          showToast("Invalid symbol");
+          return;
+        }
+        if (!state.symbols.includes(sym)) {
+          state.symbols.push(sym);
+          renderChips();
+          updateAll();
+        } else {
+          showToast(`${sym} already added`);
+        }
+        symbolInput.value = "";
+      }
+
+      addSymbolBtn.addEventListener("click", addCurrentSymbol);
+      symbolInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addCurrentSymbol();
+      });
+
+      tfButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.range = btn.dataset.range;
+          setActiveTF(state.range);
+          updateAll();
+        });
+      });
+
+      refreshBtn.addEventListener("click", () => updateAll(true));
+
+      // --- API Modal ---
+      apiBtn.addEventListener("click", () => {
+        marketstackKey.value = localStorage.getItem("MARKETSTACK_KEY") || "";
+        openaiKey.value = localStorage.getItem("OPENAI_KEY") || "";
+        apiModal.classList.remove("hidden");
+        apiModal.classList.add("flex");
+      });
+      closeApiModal.addEventListener("click", () => {
+        apiModal.classList.add("hidden");
+        apiModal.classList.remove("flex");
+      });
+      saveKeys.addEventListener("click", () => {
+        if (marketstackKey.value) localStorage.setItem("MARKETSTACK_KEY", marketstackKey.value);
+        if (openaiKey.value) localStorage.setItem("OPENAI_KEY", openaiKey.value);
+        showToast("Keys saved");
+        closeApiModal.click();
+        loadKeys();
+        updateAll(true);
+      });
+      clearKeys.addEventListener("click", () => {
+        localStorage.removeItem("MARKETSTACK_KEY");
+        localStorage.removeItem("OPENAI_KEY");
+        marketstackKey.value = "";
+        openaiKey.value = "";
+        showToast("Keys cleared");
+      });
+
+      function loadKeys() {
+        state.marketstackKey = localStorage.getItem("MARKETSTACK_KEY") || null;
+        state.openaiKey = localStorage.getItem("OPENAI_KEY") || null;
+      }
+
+      // --- MarketStack fetch ---
+      async function fetchHistorical(symbols, range) {
+        const key = state.marketstackKey;
+        if (!key) {
+          throw new Error("Missing MarketStack key. Click Connect APIs.");
+        }
+        const { from, to } = rangeToDates(range);
+        // Batch request for all symbols via comma-separated 'symbols'
+        const url = new URL("https://api.marketstack.com/v1/eod");
+        url.searchParams.set("access_key", key);
+        url.searchParams.set("symbols", symbols.join(","));
+        url.searchParams.set("date_from", from);
+        url.searchParams.set("date_to", to);
+        url.searchParams.set("limit", "1000");
+        url.searchParams.set("sort", "ASC");
+
+        const res = await fetch(url.toString());
+        if (!res.ok) throw new Error("MarketStack error");
+        const json = await res.json();
+        if (!json || !json.data) throw new Error("No data from MarketStack");
+
+        // Group by symbol
+        const grouped = {};
+        json.data.forEach(row => {
+          const sym = row.symbol?.toUpperCase();
+          if (!sym) return;
+          if (!grouped[sym]) grouped[sym] = [];
+          grouped[sym].push({
+            date: row.date,
+            close: Number(row.adj_close ?? row.close),
+            volume: Number(row.volume ?? 0),
+          });
+        });
+
+        // Sort and store
+        Object.keys(grouped).forEach(sym => {
+          grouped[sym].sort((a,b) => new Date(a.date) - new Date(b.date));
+        });
+
+        return grouped;
+      }
+
+      // --- Charts ---
+      let priceChart, volumeChart;
+
+      function ensureCharts() {
+        if (!priceChart) {
+          priceChart = new FusionCharts({
+            type: "zoomline",
+            renderAt: "priceChart",
+            width: "100%",
+            height: "400",
+            dataFormat: "json",
+            dataSource: {
+              chart: {
+                theme: "fusion",
+                bgColor: "#0a0a0a",
+                canvasBgColor: "#0f0f10",
+                showLegend: "1",
+                legendBgAlpha: "0",
+                legendItemFontColor: "#cfcfcf",
+                legendItemFont: "Inter",
+                legendItemFontSize: "12",
+                showValues: "0",
+                drawAnchors: "0",
+                paletteColors: "#7c3aed,#22d3ee,#34d399,#f59e0b,#ef4444,#a78bfa",
+                plotHighlightEffect: "fadeout",
+                divLineColor: "#2a2a2b",
+                vDivLineColor: "#2a2a2b",
+                yAxisValueDecimals: "2",
+                showCanvasBorder: "0",
+                showAlternateVGridColor: "0",
+                labelFontColor: "#9a9a9a",
+                labelFont: "Inter",
+                labelFontSize: "11",
+                yAxisNameFontColor: "#a3a3a3",
+                numDivLines: "4",
+                formatNumberScale: "0",
+                toolTipBgColor: "#0f0f10",
+                toolTipColor: "#e5e5e5",
+                toolTipBorderColor: "#2a2a2b",
+                showToolTipShadow: "0",
+                crosslinealpha: "30",
+                canvasPadding: "10",
+                legendCaption: ""
+              },
+              categories: [{ category: [] }],
+              dataset: []
+            }
+          }).render();
+        }
+        if (!volumeChart) {
+          volumeChart = new FusionCharts({
+            type: "mscolumn2d",
+            renderAt: "volumeChart",
+            width: "100%",
+            height: "180",
+            dataFormat: "json",
+            dataSource: {
+              chart: {
+                theme: "fusion",
+                bgColor: "#0a0a0a",
+                canvasBgColor: "#0f0f10",
+                showLegend: "1",
+                legendBgAlpha: "0",
+                legendItemFontColor: "#cfcfcf",
+                legendItemFont: "Inter",
+                legendItemFontSize: "11",
+                showValues: "0",
+                paletteColors: "#374151,#4b5563,#6b7280,#9ca3af,#d1d5db",
+                divLineColor: "#2a2a2b",
+                vDivLineColor: "#2a2a2b",
+                formatNumberScale: "0",
+                labelFontColor: "#9a9a9a",
+                labelFont: "Inter",
+                labelFontSize: "11",
+                showAlternateVGridColor: "0",
+                yAxisValueDecimals: "0",
+                showToolTipShadow: "0",
+                toolTipBgColor: "#0f0f10",
+                toolTipColor: "#e5e5e5",
+                toolTipBorderColor: "#2a2a2b",
+                showCanvasBorder: "0",
+                canvasPadding: "10"
+              },
+              categories: [{ category: [] }],
+              dataset: []
+            }
+          }).render();
+        }
+      }
+
+      function buildZoomlineData(series) {
+        const allDates = new Set();
+        Object.values(series).forEach(arr => arr.forEach(p => allDates.add(p.date)));
+        const dates = Array.from(allDates).sort((a,b) => new Date(a) - new Date(b));
+        const categories = dates.map(d => ({ label: new Date(d).toISOString().slice(0,10) }));
+        const dataset = Object.keys(series).map((sym, idx) => {
+          // Map value by date
+          const byDate = new Map(series[sym].map(p => [p.date, p.close]));
+          return {
+            seriesname: sym,
+            data: dates.map(d => ({ value: byDate.get(d) ?? "" }))
+          };
+        });
+        return { categories, dataset, dates };
+      }
+
+      function buildVolumeData(series, dates) {
+        const categories = dates.map(d => ({ label: new Date(d).toISOString().slice(0,10) }));
+        const dataset = Object.keys(series).map(sym => {
+          const byDate = new Map(series[sym].map(p => [p.date, p.volume]));
+          return { seriesname: sym, data: dates.map(d => ({ value: byDate.get(d) ?? "0" })) };
+        });
+        return { categories, dataset };
+      }
+
+      function updateCharts() {
+        ensureCharts();
+        const activeSeries = {};
+        state.symbols.forEach(sym => {
+          if (state.series[sym] && state.series[sym].length) {
+            activeSeries[sym] = state.series[sym];
+          }
+        });
+        const hasData = Object.keys(activeSeries).length > 0;
+        if (!hasData) {
+          chartMeta.textContent = "";
+          volumeMeta.textContent = "";
+          priceChart?.setJSONData({ chart: priceChart.args.dataSource.chart, categories: [{ category: [] }], dataset: [] });
+          volumeChart?.setJSONData({ chart: volumeChart.args.dataSource.chart, categories: [{ category: [] }], dataset: [] });
+          return;
+        }
+
+        const { categories, dataset, dates } = buildZoomlineData(activeSeries);
+        priceChart.setJSONData({
+          chart: { ...priceChart.args.dataSource.chart, caption: "" },
+          categories: [{ category: categories }],
+          dataset
+        });
+
+        const vol = buildVolumeData(activeSeries, dates);
+        volumeChart.setJSONData({
+          chart: { ...volumeChart.args.dataSource.chart, caption: "" },
+          categories: [{ category: vol.categories }],
+          dataset: vol.dataset
+        });
+
+        const first = new Date(dates[0]).toISOString().slice(0,10);
+        const last = new Date(dates[dates.length-1]).toISOString().slice(0,10);
+        chartMeta.textContent = `${first} → ${last}`;
+        volumeMeta.textContent = `${state.symbols.length} symbol(s)`;
+      }
+
+      function computeSentiment() {
+        const perfs = [];
+        state.symbols.forEach(sym => {
+          const arr = state.series[sym];
+          if (!arr || arr.length < 2) return;
+          const start = arr[0].close;
+          const end = arr[arr.length - 1].close;
+          const pct = (end - start) / (start || 1);
+          perfs.push(pct);
+        });
+        if (!perfs.length) {
+          breadthPct.textContent = "—";
+          avgReturn.textContent = "—";
+          sentimentBadge.textContent = "Neutral";
+          sentimentBadge.className = "inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs ring-1 ring-neutral-700 bg-neutral-800 text-neutral-300";
+          return;
+        }
+        const up = perfs.filter(p => p > 0).length;
+        const breadth = up / perfs.length;
+        const avg = perfs.reduce((a,b) => a + b, 0) / perfs.length;
+
+        breadthPct.textContent = `${Math.round(breadth * 100)}%`;
+        avgReturn.textContent = fmtPct(avg);
+
+        let label = "Neutral", cls = "bg-neutral-800 text-neutral-300 ring-neutral-700";
+        if (avg > 0.01 && breadth >= 0.6) { label = "Bullish"; cls = "bg-emerald-900/30 text-emerald-300 ring-emerald-700/50"; }
+        else if (avg < -0.01 && breadth <= 0.4) { label = "Bearish"; cls = "bg-rose-900/30 text-rose-300 ring-rose-700/50"; }
+
+        sentimentBadge.textContent = label;
+        sentimentBadge.className = `inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs ring-1 ${cls}`;
+      }
+
+      // --- Insights (GPT) ---
+      async function generateInsights() {
+        const horizon = insightHorizon.value;
+        const all = {};
+        state.symbols.forEach(sym => {
+          const arr = state.series[sym] || [];
+          all[sym] = arr.map(p => ({ date: p.date, close: p.close, volume: p.volume }));
+        });
+
+        if (Object.keys(all).length === 0 || Object.values(all).every(a => a.length === 0)) {
+          insightsBox.textContent = "No data to analyze. Add symbols and fetch data first.";
+          return;
+        }
+
+        insightsBox.textContent = "Analyzing with GPT…";
+
+        // Prefer client-side call if key is present; otherwise attempt backend proxy
+        const payload = {
+          horizon,
+          range: state.range,
+          symbols: state.symbols,
+          series: all
+        };
+
+        try {
+          let text = "";
+          if (state.openaiKey) {
+            const sys = "You are a market analyst. Provide concise, neutral, non-promissory insights. Avoid financial advice. Use bullet points when helpful. Keep under 150 words.";
+            const user = `Analyze these symbols over ${state.range} with ${horizon}-term focus. Provide trend, momentum, support/resistance zones if clear, and risks. Data: ${JSON.stringify(payload)}`;
+            const res = await fetch("https://api.openai.com/v1/chat/completions", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${state.openaiKey}`
+              },
+              body: JSON.stringify({
+                model: "gpt-4o-mini",
+                messages: [
+                  { role: "system", content: sys },
+                  { role: "user", content: user }
+                ],
+                temperature: 0.3,
+                max_tokens: 300
+              })
+            });
+            if (!res.ok) throw new Error("GPT request failed");
+            const data = await res.json();
+            text = data.choices?.[0]?.message?.content?.trim() || "No insight generated.";
+          } else {
+            // Backend proxy example (implement this on your server)
+            const res = await fetch("/api/gpt-insights", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error("Backend insight request failed");
+            const data = await res.json();
+            text = data.insights || "No insight generated.";
+          }
+          insightsBox.textContent = text;
+        } catch (err) {
+          insightsBox.textContent = "Failed to generate insights. Connect API keys or check your backend.";
+          console.error(err);
+        }
+      }
+
+      genInsightsBtn.addEventListener("click", generateInsights);
+
+      // --- Update pipeline ---
+      async function updateAll(force = false) {
+        if (state.loading) return;
+        state.loading = true;
+
+        // UI: show loading state on refresh
+        refreshBtn.classList.add("opacity-60", "pointer-events-none");
+
+        try {
+          const symbolsToFetch = state.symbols.filter(sym => force || !state.series[sym] || !state.series[sym].length);
+          if (symbolsToFetch.length) {
+            const grouped = await fetchHistorical(state.symbols, state.range);
+            // Merge: only set those present; clear missing
+            state.symbols.forEach(sym => {
+              state.series[sym] = grouped[sym] || [];
+            });
+          } else {
+            // If not fetching, still refresh for current range
+            const grouped = await fetchHistorical(state.symbols, state.range);
+            state.symbols.forEach(sym => { state.series[sym] = grouped[sym] || []; });
+          }
+
+          updateCharts();
+          computeSentiment();
+        } catch (e) {
+          console.error(e);
+          showToast(e.message || "Update failed");
+        } finally {
+          state.loading = false;
+          refreshBtn.classList.remove("opacity-60", "pointer-events-none");
+        }
+      }
+
+      // --- Init ---
+      function init() {
+        loadKeys();
+        setActiveTF(state.range);
+        renderChips();
+        updateAll(true);
+      }
+
+      init();
+    </script>
+  
+</body></html>

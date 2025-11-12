@@ -1,0 +1,87 @@
+Last modified on 27.10.2025, 16:46 CET
+Quickstart Guide
+All registered users, whether on a free or paid plan, can use our Quickstart Guide to explore the full range of API functionalities with just one click.
+
+Existing users: Access the Quickstart Guide below.
+New users: Create an account and get started immediately.
+Get onboarded with the Marketstack API and start retrieving stock market data in just a few minutes! 
+
+Step 1: Get Your API Access Key
+Sign up for a free account to start using the Marketstack API. Once registered, your personal API Access Key will be available in the Dashboard. This key is required to authenticate all API requests—keep it secure. You can reset it anytime from your Account Dashboard.
+
+Get free API Access Key
+Step 2: API Endpoints
+Marketstack offers several endpoints:
+
+End-of-Day Data: Retrieve daily stock market data.
+Intraday Data: Retrieve intraday and real-time market data.
+Tickers: Get information about stock ticker symbols.
+Exchanges: Retrieve information about supported exchanges.
+Currencies: Retrieve information about supported currencies.
+Timezones: Retrieve information about supported timezones.
+Base URL: All API requests start with:
+
+http://api.marketstack.com/v1/
+You can also get started quickly with Postman by forking the official Marketstack API Postman Collection.
+
+
+Step 3: Make API Requests
+Try simple requests for end-of-day, intraday, and static data endpoints. Append your access_key to any endpoint.
+
+End-of-Day Data Endpoint
+
+http://api.marketstack.com/v1/eod?access_key=YOUR_ACCESS_KEY&symbols=AAPL
+// Optional parameters:
+&sort=DESC
+&date_from=YYYY-MM-DD
+&date_to=YYYY-MM-DD
+&limit=100
+&offset=0
+Intraday Data Endpoint
+
+http://api.marketstack.com/v1/intraday?access_key=YOUR_ACCESS_KEY&symbols=AAPL
+// Optional parameters:
+&interval=1h
+&sort=DESC
+&date_from=YYYY-MM-DD
+&date_to=YYYY-MM-DD
+&limit=100
+&offset=0
+Tickers Endpoint
+
+http://api.marketstack.com/v1/tickers?access_key=YOUR_ACCESS_KEY
+// Optional parameters:
+&exchange=
+&limit=100
+&offset=0
+Exchanges Endpoint
+
+http://api.marketstack.com/v1/exchanges?access_key=YOUR_ACCESS_KEY
+// Optional parameters:
+&limit=100
+&offset=0
+Currencies Endpoint
+
+http://api.marketstack.com/v1/currencies?access_key=YOUR_ACCESS_KEY
+// Optional parameters:
+&limit=100
+&offset=0
+Timezones Endpoint
+
+http://api.marketstack.com/v1/timezones?access_key=YOUR_ACCESS_KEY
+// Optional parameters:
+&limit=100
+&offset=0
+More parameters are available for each endpoint. Refer to the API Documentation for full details.
+
+Step 4: First API Call
+We recommend starting with the End-of-Day Data endpoint, as it is the primary method for retrieving daily stock data. Use the symbols parameter to query one or multiple ticker symbols (comma-separated).
+
+Explore widely used API calls and required parameters in the Postman Collection.
+
+This is just the beginning of what the Marketstack API can do. For advanced integration guides and code examples, refer to the official API Documentation.
+
+Support & Resources
+
+For any questions or issues, contact our support team.
+Explore commonly used API calls and examples to maximize your integration.

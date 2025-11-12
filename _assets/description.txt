@@ -1,0 +1,11 @@
+APIs in action: Marketstack, FusionCharts, GPT or similar LLMs
+
+Description: 
+
+A web app built with MarketStack, FusionCharts, and GPT that lets users visualize and understand stock trends. 
+
+Users can enter any stock symbol to fetch real-time and historical data, rendered in sleek, interactive charts using FusionCharts. 
+
+GPT then analyzes the trend and provides natural-language insights or short-term predictions. 
+
+Users can switch between timeframes, compare multiple stocks, and view overall market sentiment all in a clean, modern dashboard.
