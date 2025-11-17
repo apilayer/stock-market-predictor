@@ -81,6 +81,18 @@ function App() {
   return (
     <div className="antialiased bg-neutral-950 text-neutral-200 font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
       <div className="min-h-screen flex flex-col">
+        <div className="bg-yellow-200/70 text-yellow-950 text-xs sm:text-sm text-center py-2 px-4">
+          This app is built using the{' '}
+          <a
+            href="https://marketstack.com/"
+            className="underline decoration-dotted underline-offset-2"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Marketstack API
+          </a>
+          .
+        </div>
         <Header
           onOpenApiModal={() => setShowApiModal(true)}
           onRefresh={() => updateAll(true)}
