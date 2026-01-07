@@ -2,7 +2,7 @@
 
 ![App screenshot](./screenshot.jpg)
 
-A full-stack web application for analyzing and visualizing stock data with MarketStack, FusionCharts, and optional GPT insights. The frontend offers multi-symbol charting, sentiment, and AI commentary, while the backend securely proxies all MarketStack requests.
+A full-stack web application for analyzing and visualizing stock data with [MarketStack](https://marketstack.com/), FusionCharts, and optional GPT insights. The frontend offers multi-symbol charting, sentiment, and AI commentary, while the backend securely proxies all MarketStack requests.
 
 ## Get Started
 
